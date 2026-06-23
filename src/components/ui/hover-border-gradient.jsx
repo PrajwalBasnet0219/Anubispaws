@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { AnimatePresence, motion } from "framer-motion";
 import { cn } from "../../lib/utils";
 import PropTypes from "prop-types";
 
