@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { cn } from "../../lib/utils";
 import PropTypes from "prop-types";
+import { motion } from "framer-motion";
 
 export function HoverBorderGradient({
   children,
