@@ -1,0 +1,18 @@
+* [33m8f20526[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m)[m Fix ESLint error
+[31m|[m * [33mdd01603[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m Update README with project details and features
+[31m|[m * [33maf996fc[m Update PostgreSQL connection string in config
+[31m|[m * [33mb4ba583[m Update README.md
+[31m|[m[31m/[m  
+* [33m926e2ec[m pets, product, online payment  and admin system
+* [33m807aea8[m pets, product and admin system
+* [33m12d6c79[m pets, product and admin system
+* [33mec15bf5[m khalti email receipt and other minor upgrades
+* [33m3f79935[m server side validation, admin order management
+* [33ma863a90[m add admin, user, product, pet, purchase, all management stuff, weight and server side vaildation
+* [33m2837e61[m add admin, user, product, pet, purchase, all management stuff
+* [33m8d458fc[m add admin, user, product, pet, purchase, all management stuff
+* [33m768c8f5[m add admin, user, product, pet, purchase
+* [33m32792a1[m Initial commit
+* [33mee9eb13[m[33m ([m[1;31morigin/master[m[33m)[m Update README.md
+* [33m15c67d0[m inital commit
+* [33m075ffdd[m initial commit
