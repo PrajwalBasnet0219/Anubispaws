@@ -59,7 +59,7 @@ export default function Footer() {
         </div>
 
         {/* Middle Section */}
-        <div className="flex flex-col gap-4">
+        {/* <div className="flex flex-col gap-4">
           <span className="font-semibold">Support</span>
           <ul className="flex flex-col gap-4">
             {["Messenger", "Facebook", "Discord"].map((item) => (
@@ -71,7 +71,7 @@ export default function Footer() {
               </li>
             ))}
           </ul>
-        </div>
+        </div> */}
             <div className="flex flex-col gap-4">
           <span className="font-semibold">About your pet</span>
           <ul className="flex flex-col gap-4">
