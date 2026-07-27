@@ -1,9 +1,10 @@
 "use client";
 
+import { Suspense, useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
-import { useState } from "react";
-import { LightRays } from "@/components/ui/light-rays"
-export default function ResetPasswordPage() {
+import { LightRays } from "@/components/ui/light-rays";
+
+function ResetPasswordForm() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const token = searchParams.get("token"); // ← comes from URL
@@ -82,5 +83,13 @@ export default function ResetPasswordPage() {
       </form>
       <LightRays />
     </div>
+  );
+}
+
+export default function ResetPasswordPage() {
+  return (
+    <Suspense fallback={null}>
+      <ResetPasswordForm />
+    </Suspense>
   );
 }
