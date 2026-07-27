@@ -26,7 +26,7 @@ function verifyAdmin(req: NextRequest) {
    ========================= */
 export async function PATCH(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   const admin = verifyAdmin(req);
   if (!admin) {
@@ -34,7 +34,8 @@ export async function PATCH(
   }
 
   try {
-    const productId = Number(params.id);
+    const { id } = await context.params;
+    const productId = Number(id);
     const body = await req.json();
 
     const {
@@ -81,7 +82,7 @@ export async function PATCH(
    ========================= */
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  context: { params: Promise<{ id: string }> }
 ) {
   console.log("🗑️ Admin Products DELETE called");
 
@@ -92,7 +93,7 @@ export async function DELETE(
   }
 
   try {
-    const { id } = await params; // IMPORTANT
+    const { id } = await context.params; // IMPORTANT
     const productId = Number(id);
     console.log("🗑️ Deleting product ID:", productId);
 

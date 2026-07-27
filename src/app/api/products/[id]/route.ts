@@ -1,15 +1,14 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import pool from "@/db/db";
 
-export async function PATCH(
-  req: NextRequest,
+export async function GET(
+  req: Request,
   context: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = await context.params;
+    const { id } = await context.params; // ✅ THIS IS THE FIX
 
     const productId = Number(id);
-
     if (isNaN(productId)) {
       return NextResponse.json(
         { error: "Invalid product ID" },
@@ -32,7 +31,6 @@ export async function PATCH(
     return NextResponse.json({ product: rows[0] });
   } catch (err) {
     console.error("Product fetch error:", err);
-
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 }

@@ -1,9 +1,19 @@
 "use client";
 import React from "react";
-import PropTypes from "prop-types";
 import { cn } from "../../lib/utils";
 
-export default function BlurryBlob({ className, firstBlobColor, secondBlobColor }) {
+// Define the static TypeScript type for your props
+interface BlurryBlobProps {
+  className?: string;
+  firstBlobColor?: string;
+  secondBlobColor?: string;
+}
+
+export default function BlurryBlob({
+  className = "",
+  firstBlobColor = "bg-pink-400",
+  secondBlobColor = "bg-blue-400",
+}: BlurryBlobProps) {
   return (
     <div className={cn("relative w-[400px] h-[400px]", className)}>
       {/* First blob */}
@@ -45,15 +55,3 @@ export default function BlurryBlob({ className, firstBlobColor, secondBlobColor 
     </div>
   );
 }
-
-BlurryBlob.propTypes = {
-  className: PropTypes.string,
-  firstBlobColor: PropTypes.string,
-  secondBlobColor: PropTypes.string,
-};
-
-BlurryBlob.defaultProps = {
-  className: "",
-  firstBlobColor: "bg-pink-400",
-  secondBlobColor: "bg-blue-400",
-};
