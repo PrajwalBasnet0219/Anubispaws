@@ -73,7 +73,7 @@ export default function Footer() {
           </ul>
         </div> */}
             <div className="flex flex-col gap-4">
-          <span className="font-semibold">About your pet</span>
+          <span className="font-semibold">About your pets</span>
           <ul className="flex flex-col gap-4">
             {[ "Marketplace", "Features"].map((item) => (
               <li
