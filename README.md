@@ -1,5 +1,4 @@
-Anubis Paws is for your pet health care site where you can Buy pets, Order product and pay online (This project is only avaiable at Nepal) The Site database is not working properly will be up days.
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+Anubis Paws is for your pet health care site where you can Buy pets, Order product and pay online only available in kalthi (This project is only avaiable at Nepal) The Site database is not working properly will be up in upcoming days.
 
 ## Getting Started
 
