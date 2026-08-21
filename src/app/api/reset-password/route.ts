@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import mysql from "mysql2/promise";
 import bcrypt from "bcryptjs";
+import pool from "@/db/db";
 
 export async function POST(req: NextRequest) {
   try {
@@ -15,19 +15,10 @@ export async function POST(req: NextRequest) {
 
     const hashedPassword = await bcrypt.hash(newPassword, 10);
 
-    const connection = await mysql.createConnection({
-      host: "localhost",
-      user: "rei",
-      password: "rei",
-      database: "pet_care",
-    });
-
-    const [result] = await connection.execute(
-      "UPDATE users SET password = ? WHERE email = ?",
-      [hashedPassword, email]
-    );
-
-    await connection.end();
+    await pool.execute("UPDATE users SET password = ? WHERE email = ?", [
+      hashedPassword,
+      email,
+    ]);
 
     return NextResponse.json({
       success: true,

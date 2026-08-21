@@ -1,0 +1,167 @@
+ANUBISPAWS - CHANGELOG (Aug 22, 2026)
+======================================
+
+1. ENV SECURITY FIX - Removed NEXT_PUBLIC_ prefix from secret keys
+------------------------------------------------------------------
+Problem: NEXT_PUBLIC_ prefix exposes values to the browser. Secret keys
+must never be browser-exposable.
+
+- .env.local: NEXT_PUBLIC_KHALTI_SECRET_KEY  ->  KHALTI_SECRET_KEY
+- .env.local: NEXT_PUBLIC_ESEWA_SECRET_KEY   ->  ESEWA_SECRET_KEY
+- src/app/api/payments/khalti/route.ts          (updated to process.env.KHALTI_SECRET_KEY)
+- src/app/api/payments/khalti/initiate/route.ts (updated to process.env.KHALTI_SECRET_KEY)
+- src/app/api/payments/khalti/verify/route.ts   (updated to process.env.KHALTI_SECRET_KEY)
+
+Note: NEXT_PUBLIC_KHALTI_PUBLIC_KEY should ALSO be renamed by hand to
+KHALTI_PUBLIC_KEY in .env.local - it is not used anywhere in the code,
+so no code change is needed. After that NO NEXT_PUBLIC_ vars remain.
+
+
+2. HARDCODED VALUE CHECK
+------------------------
+- No payment keys / secrets were hardcoded anywhere in src/
+- Fixed duplicated hardcoded URL:
+  - src/app/api/payments/khalti/route.ts line 4:
+    was hardcoded "https://dev.khalti.com/api/v2/epayment/lookup/"
+    now uses process.env.KHALTI_VERIFY_URL
+
+
+3. ADMIN EMAIL CHANGED TO reikuozaki96@gmail.com
+------------------------------------------------
+Old email prajwalbasnet1943@gmail.com was hardcoded in 7 files.
+All replaced with a shared config:
+
+NEW FILE: src/lib/admin.ts
+  - exports ADMIN_EMAIL (read from ADMIN_EMAIL env var)
+  - .env.local now has: ADMIN_EMAIL=reikuozaki96@gmail.com
+
+Files updated to import from src/lib/admin.ts:
+- src/app/api/admin/users/route.ts
+- src/app/api/admin/users/[id]/route.ts
+- src/app/api/admin/pets/route.ts
+- src/app/api/admin/pets/[id]/route.ts
+- src/app/api/admin/products/route.ts
+- src/app/api/admin/products/[id]/route.ts
+- src/app/api/user/verify-admin/route.ts
+
+Security tightened:
+- src/app/api/admin/orders/route.ts      (now also checks admin EMAIL, not just role)
+- src/app/api/admin/orders/[id]/route.ts (now also checks admin EMAIL, not just role)
+- src/app/api/login/route.ts             (JWT role is decided by the server:
+  ONLY reikuozaki96@gmail.com gets role "admin", everyone else gets "user"
+  even if the database says otherwise)
+- src/components/navbar/Navbar.tsx       ("Admin" link enabled, visible only
+  when user.role === "admin")
+
+
+4. ESEWA REMOVED - KHALTI ONLY
+------------------------------
+- DELETED: src/app/payment/ (entire page was dead legacy code - it posted
+  to a nonexistent /api/checkout-session route and nothing linked to it)
+- src/lib/types.ts: removed ESEWA enum member and EsewaConfig interface
+- src/lib/payments.ts: type changed to "KHALTI" only
+- src/lib/payments/createpayments.ts: type changed to "khalti" only
+- src/app/dashboard/page.tsx: removed eSewa button label and dead eSewa
+  form-submit code in handleOnlinePayment
+- src/app/adopt/[id]/page.tsx and
+  src/app/marketplace/buy-product/[id]/page.tsx:
+  removed commented-out eSewa <option> elements
+- src/app/api/user/orders/route.ts: removed esewa_transaction_uuid /
+  esewa_ref_id from the payments SELECT query
+- .env.local: all eSewa entries removed (client id/secret, merchant code,
+  verify URL)
+
+
+5. REMAINING NEXT_PUBLIC_ VARS IN .env.local (unused)
+-----------------------------------------------------
+These trigger the editor warning but are NOT used anywhere in the code.
+You can safely DELETE these two lines yourself:
+- NEXT_PUBLIC_BASE_URL
+- NEXT_PUBLIC_KHALTI_ADMIN_PHONE
+
+And RENAME this one (remove the prefix, no code change needed):
+- NEXT_PUBLIC_KHALTI_PUBLIC_KEY  ->  KHALTI_PUBLIC_KEY
+
+
+6. BUILD STATUS
+---------------
+npm run build -> PASSED (compiled successfully, types checked,
+all 32 pages generated, no errors)
+
+
+7. IMPORTANT REMINDERS
+----------------------
+- Restart the dev server (npm run dev) after any .env.local change -
+  env variables are only read at startup.
+- To log in as admin, reikuozaki96@gmail.com must exist in the users
+  table WITH A PASSWORD (sign up via the normal signup form if needed).
+  Google login does not issue the custom JWT used for admin access.
+
+
+# Database Settings
+MYSQL_HOST=
+MYSQL_USER=
+MYSQL_PASSWORD=
+MYSQL_DATABASE=
+DATABASE_URL=
+
+# SMTP Settings
+EMAIL_HOST=
+EMAIL_PORT=
+EMAIL_USER=
+EMAIL_PASS=
+EMAIL_FROM=
+APP_URL=
+
+
+JWT_SECRET=
+# Admin account
+ADMIN_EMAIL=
+
+next auth Settings
+NEXTAUTH_SECRET=
+NEXTAUTH_URL=
+NEXT_PUBLIC_BASE_URL=
+
+
+# Payment Gateway Settings (Khalti only)
+NEXT_PUBLIC_KHALTI_PUBLIC_KEY=
+KHALTI_SECRET_KEY=
+KHALTI_VERIFY_URL=
+NEXT_PUBLIC_KHALTI_ADMIN_PHONE=
+
+#Email Reciept
+RESEND_API_KEY=your_resend_api_key
+EMAIL_FROM=
+
+
+8. ENV VARS ACTUALLY REQUIRED BY THE PROJECT
+--------------------------------------------
+(checked against every process.env.* usage in src/)
+
+REQUIRED - keep these:
+  DATABASE_URL            -> src/db/db.ts (database connection)
+  EMAIL_HOST              -> src/lib/mailer.ts (SMTP)
+  EMAIL_PORT              -> src/lib/mailer.ts
+  EMAIL_USER              -> src/lib/mailer.ts
+  EMAIL_PASS              -> src/lib/mailer.ts
+  EMAIL_FROM              -> src/lib/mailer.ts
+  APP_URL                 -> forgot-password reset links
+  JWT_SECRET              -> login / session / admin auth
+  ADMIN_EMAIL             -> admin access (reikuozaki96@gmail.com)
+  GOOGLE_CLIENT_ID        -> Google login
+  GOOGLE_CLIENT_SECRET    -> Google login
+  NEXTAUTH_SECRET         -> NextAuth
+  NEXTAUTH_URL            -> NextAuth
+  KHALTI_SECRET_KEY       -> Khalti payment API
+  KHALTI_VERIFY_URL       -> Khalti payment API
+
+NOT USED ANYWHERE - safe to DELETE from .env.local:
+  MYSQL_HOST, MYSQL_USER, MYSQL_PASSWORD, MYSQL_DATABASE
+      (connection is done via DATABASE_URL only)
+  NEXT_PUBLIC_BASE_URL
+      (redundant, APP_URL already covers it)
+  NEXT_PUBLIC_KHALTI_PUBLIC_KEY   (or rename to KHALTI_PUBLIC_KEY)
+  NEXT_PUBLIC_KHALTI_ADMIN_PHONE  (or rename to KHALTI_ADMIN_PHONE)
+  RESEND_API_KEY                  (Resend not used, mailer = Gmail SMTP)
+  EMAIL_FROM (the duplicate one at the bottom of .env.local)

@@ -28,7 +28,7 @@ export async function POST(req: NextRequest) {
 
   await db.query(
     `INSERT INTO password_resets (user_id, token_hash, expires_at)
-     VALUES (?, ?, DATE_ADD(NOW(), INTERVAL 10 MINUTE))`,
+     VALUES (?, ?, NOW() + INTERVAL '10 minutes')`,
     [user.id, tokenHash]
   );
 
