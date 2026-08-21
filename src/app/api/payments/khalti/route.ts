@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import db from "@/db/db";
 
-const KHALTI_VERIFY_URL = "https://dev.khalti.com/api/v2/epayment/lookup/";
-const KHALTI_SECRET_KEY = process.env.NEXT_PUBLIC_KHALTI_SECRET_KEY!;
+const KHALTI_VERIFY_URL = process.env.KHALTI_VERIFY_URL!;
+const KHALTI_SECRET_KEY = process.env.KHALTI_SECRET_KEY!;
 
 export async function POST(req: NextRequest) {
   try {

@@ -56,16 +56,15 @@ export default function Navbar() {
         <div className="ml-1 flex gap-4 items-center">
           {user ? (
             <div className="flex items-center gap-2">
-              {/* Show Admin link only for admin
-              {user.email === "prajwalbasnet1943@gmail.com" &&
-                user.role === "admin" && (
-                  <Link
-                    href="/admin"
-                    className="gap-3 text-white rounded-full object-contain transition-transform duration-300 ease-in-out hover:scale-110 font-semibold mr-4"
-                  >
-                    Admin
-                  </Link>
-                )} */}
+              {/* Show Admin link only for admin */}
+              {user.role === "admin" && (
+                <Link
+                  href="/admin"
+                  className="gap-3 text-white rounded-full object-contain transition-transform duration-300 ease-in-out hover:scale-110 font-semibold mr-4"
+                >
+                  Admin
+                </Link>
+              )}
 
               {/* <img
                 src={user.image || "/images/logo.png"}

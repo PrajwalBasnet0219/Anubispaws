@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import pool from "@/db/db";
+import { ADMIN_EMAIL } from "@/lib/admin";
 
 export async function POST(req: NextRequest) {
   console.log("🔐 Login API called");
@@ -58,12 +59,14 @@ export async function POST(req: NextRequest) {
     }
 
     console.log("🎫 Creating JWT token...");
+    // Admin role is granted ONLY to ADMIN_EMAIL, regardless of DB role
+    const role = user.email.toLowerCase() === ADMIN_EMAIL.toLowerCase() ? "admin" : "user";
     const token = jwt.sign(
       {
         id: user.id,
         email: user.email,
         name: user.name || user.email,
-        role: user.role, // ✅ ADD THIS LINE
+        role,
       },
       process.env.JWT_SECRET!,
       { expiresIn: "7d" },
@@ -73,12 +76,12 @@ export async function POST(req: NextRequest) {
       id: user.id,
       email: user.email,
       name: user.name,
-      role: user.role, // ✅ ADD THIS LINE
+      role,
     });
 
     return NextResponse.json({
       token,
-      user: { name: user.name, email: user.email, role: user.role }, // ✅ ADD role here too
+      user: { name: user.name, email: user.email, role },
     });
   } catch (err: any) {
     console.error("❌ Login error:", err);

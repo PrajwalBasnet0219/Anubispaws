@@ -4,7 +4,7 @@ import { sendMail } from "@/lib/mailer";
 import { receiptEmail } from "@/lib/emailTemplates/receipt";
 
 const KHALTI_VERIFY_URL = process.env.KHALTI_VERIFY_URL!;
-const KHALTI_SECRET_KEY = process.env.NEXT_PUBLIC_KHALTI_SECRET_KEY!;
+const KHALTI_SECRET_KEY = process.env.KHALTI_SECRET_KEY!;
 
 export async function POST(req: NextRequest) {
   try {

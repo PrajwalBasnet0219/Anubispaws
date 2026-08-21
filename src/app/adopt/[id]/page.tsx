@@ -226,7 +226,6 @@ const handleSubmit = async (e: React.FormEvent) => {
                 className="w-full p-3 bg-white/10 text-black rounded border border-white/30"
               >
                 <option value="cash_on_delivery">Cash on Delivery</option>
-                {/* <option value="esewa">eSewa</option> */}
                 <option value="khalti">Khalti</option>
               </select>
             </div>

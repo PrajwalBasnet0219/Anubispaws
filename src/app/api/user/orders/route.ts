@@ -91,9 +91,7 @@ const detailedOrders = await Promise.all(
             payment_method,
             payment_status,
             khalti_transaction_id,
-            khalti_pidx,
-            esewa_transaction_uuid,
-            esewa_ref_id
+            khalti_pidx
           FROM payments
           WHERE order_id = ?
           ORDER BY created_at DESC

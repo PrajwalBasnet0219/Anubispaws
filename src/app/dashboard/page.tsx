@@ -149,7 +149,6 @@ const getPaymentButtonLabel = (method?: string) => {
 
   const normalized = method.toLowerCase();
 
-  if (normalized === "esewa") return " 💳 Pay with eSewa";
   if (normalized === "khalti") return " 💳 Pay with Khalti";
 
   return null;
@@ -157,7 +156,7 @@ const getPaymentButtonLabel = (method?: string) => {
 async function handleOnlinePayment(
   amount: number,
   orderId: number,
-  method: "esewa" | "khalti"
+  method: "khalti"
 ) {
   const res = await fetch("/api/payments/khalti/initiate", {
     method: "POST",
@@ -171,25 +170,6 @@ async function handleOnlinePayment(
 
   const data = await res.json();
   window.location.href = data.payment_url;
-
-
-
-  if (method === "khalti") {
-    const form = document.createElement("form");
-    form.method = "POST";
-    form.action = data.payment_url;
-
-    Object.entries(data.params).forEach(([k, v]: any) => {
-      const input = document.createElement("input");
-      input.type = "hidden";
-      input.name = k;
-      input.value = v;
-      form.appendChild(input);
-    });
-
-    document.body.appendChild(form);
-    form.submit();
-  }
 }
 
 
@@ -408,7 +388,7 @@ async function handleOnlinePayment(
                             handleOnlinePayment(
                               Number(order.total_amount),
                               order.id,
-                              order.payment_method as "esewa" | "khalti",
+                              order.payment_method as "khalti",
                             )
                           }
                           className="px-6 py-3 rounded-lg font-semibold text-white bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 transition shadow-lg"

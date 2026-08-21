@@ -1,8 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import jwt from "jsonwebtoken";
 import pool from "@/db/db";
-
-const ADMIN_EMAIL = "prajwalbasnet1943@gmail.com";
+import { ADMIN_EMAIL } from "@/lib/admin";
 
 function verifyAdmin(req: NextRequest) {
   const authHeader = req.headers.get("authorization");

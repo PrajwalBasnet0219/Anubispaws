@@ -2,7 +2,7 @@ import pool from "@/db/db";
 
 export async function createPaymentFromOrder(
   orderId: number,
-  paymentMethod: "ESEWA" | "KHALTI"
+  paymentMethod: "KHALTI"
 ) {
   const conn = await pool.getConnection();
 

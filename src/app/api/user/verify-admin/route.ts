@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import jwt from "jsonwebtoken";
-
-const ADMIN_EMAIL = "prajwalbasnet1943@gmail.com";
+import { ADMIN_EMAIL } from "@/lib/admin";
 
 export async function GET(req: NextRequest) {
   console.log("=== VERIFY ADMIN API CALLED ===");

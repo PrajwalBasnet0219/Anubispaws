@@ -1,6 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import pool from "@/db/db";
 import { parseToken } from "@/lib/auth";
+import { ADMIN_EMAIL } from "@/lib/admin";
+
+function isAdmin(decoded: any): boolean {
+  return !!decoded && decoded.role === "admin" && decoded.email === ADMIN_EMAIL;
+}
 
 export async function PATCH(req: NextRequest, context: { params: Promise<{ id: string }> }) {
   try {
@@ -13,7 +18,7 @@ export async function PATCH(req: NextRequest, context: { params: Promise<{ id: s
     const token = authHeader.replace("Bearer ", "");
     const decoded = parseToken(token);
 
-    if (!decoded || decoded.role !== "admin") {
+    if (!isAdmin(decoded)) {
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 
@@ -39,7 +44,7 @@ export async function DELETE(req: NextRequest, context: { params: Promise<{ id: 
     const token = authHeader.replace("Bearer ", "");
     const decoded = parseToken(token);
 
-    if (!decoded || decoded.role !== "admin") {
+    if (!isAdmin(decoded)) {
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 

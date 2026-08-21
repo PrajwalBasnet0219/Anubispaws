@@ -1,4 +1,4 @@
-type PaymentMethod = "esewa" | "khalti";
+type PaymentMethod = "khalti";
 
 interface NormalizePaymentPayloadInput {
   amount: number;

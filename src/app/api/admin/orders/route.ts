@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import pool from "@/db/db";
 import { parseToken } from "@/lib/auth";
+import { ADMIN_EMAIL } from "@/lib/admin";
 
 export async function GET(req: NextRequest) {
   try {
@@ -13,7 +14,7 @@ export async function GET(req: NextRequest) {
     const token = authHeader.replace("Bearer ", "");
     const decoded: any = parseToken(token);
 
-    if (!decoded || decoded.role !== "admin") {
+    if (!decoded || decoded.role !== "admin" || decoded.email !== ADMIN_EMAIL) {
       return NextResponse.json({ orders: [] });
     }
 
