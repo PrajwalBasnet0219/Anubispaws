@@ -83,18 +83,15 @@ export async function DELETE(
   req: NextRequest,
   context: { params: Promise<{ id: string }> }
 ) {
-  console.log("🗑️ Admin Products DELETE called");
 
   const admin = verifyAdmin(req);
   if (!admin) {
-    console.log("❌ Unauthorized delete attempt");
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
   try {
     const { id } = await context.params; // IMPORTANT
     const productId = Number(id);
-    console.log("🗑️ Deleting product ID:", productId);
 
     const [result] = await pool.execute(
       "DELETE FROM products WHERE id = ?",
@@ -110,7 +107,6 @@ export async function DELETE(
       );
     }
 
-    console.log("✅ Product deleted:", productId);
     return NextResponse.json({ success: true });
   } catch (err: any) {
     console.error("❌ Failed to delete product:", err.message);

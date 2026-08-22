@@ -19,11 +19,9 @@ function verifyAdmin(req: NextRequest) {
 }
 
 export async function GET(req: NextRequest) {
-  console.log("📍 Admin Pets GET called");
   
   const admin = verifyAdmin(req);
   if (!admin) {
-    console.log("❌ Unauthorized");
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
@@ -31,7 +29,6 @@ export async function GET(req: NextRequest) {
     const [rows] = await pool.execute(
       "SELECT * FROM pets ORDER BY created_at DESC"
     );
-    console.log("✅ Fetched", (rows as any[]).length, "pets");
     return NextResponse.json({ pets: rows });
   } catch (err: any) {
     console.error("❌ Failed to fetch pets:", err.message);
@@ -40,17 +37,14 @@ export async function GET(req: NextRequest) {
 }
 
 export async function POST(req: NextRequest) {
-  console.log("📍 Admin Pets POST called");
 
   const admin = verifyAdmin(req);
   if (!admin) {
-    console.log("❌ Unauthorized");
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
   try {
     const body = await req.json();
-    console.log("📦 Received pet data:", body);
 
     const { name, species, breed, age, gender, description, status, image_url, price } = body;
 
@@ -62,7 +56,6 @@ export async function POST(req: NextRequest) {
       [name, species, breed, age, gender, description, status, image, price, admin.id]
     );
 
-    console.log("✅ Pet added successfully, ID:", (result as any).insertId);
     return NextResponse.json({ success: true, id: (result as any).insertId });
   } catch (err: any) {
     console.error("❌ Failed to add pet:", err);

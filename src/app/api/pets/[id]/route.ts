@@ -14,7 +14,6 @@ export async function GET(
         { status: 400 }
       );
     }
-    console.log("🐾 Fetching pet id:", id);
 
     const [rows]: any = await pool.execute(
       "SELECT * FROM pets WHERE id = ?",

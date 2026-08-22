@@ -19,11 +19,9 @@ function verifyAdmin(req: NextRequest) {
 }
 
 export async function GET(req: NextRequest) {
-  console.log("📍 Admin Users GET called");
   
   const admin = verifyAdmin(req);
   if (!admin) {
-    console.log("❌ Unauthorized");
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
@@ -31,7 +29,6 @@ export async function GET(req: NextRequest) {
     const [rows] = await pool.execute(
       "SELECT id, name, email, role, isVerified, created_at FROM users ORDER BY created_at DESC"
     );
-    console.log("✅ Fetched users:", rows);
     return NextResponse.json({ users: rows });
   } catch (err) {
     console.error("❌ Failed to fetch users:", err);

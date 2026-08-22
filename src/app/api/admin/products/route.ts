@@ -19,11 +19,9 @@ function verifyAdmin(req: NextRequest) {
 }
 
 export async function GET(req: NextRequest) {
-  console.log("📍 Admin Products GET called");
   
   const admin = verifyAdmin(req);
   if (!admin) {
-    console.log("❌ Unauthorized");
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
@@ -31,7 +29,6 @@ export async function GET(req: NextRequest) {
     const [rows] = await pool.execute(
       "SELECT * FROM products ORDER BY created_at DESC"
     );
-    console.log("✅ Fetched", (rows as any[]).length, "products");
     return NextResponse.json({ products: rows });
   } catch (err: any) {
     console.error("❌ Failed to fetch products:", err.message);
@@ -40,17 +37,14 @@ export async function GET(req: NextRequest) {
 }
 
 export async function POST(req: NextRequest) {
-  console.log("📍 Admin Products POST called");
   
   const admin = verifyAdmin(req);
   if (!admin) {
-    console.log("❌ Unauthorized");
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
   try {
     const body = await req.json();
-    console.log("📦 Received product data:", body);
 
     let { name, description, price, category, stock, image_url, weight } = body;
 
@@ -83,7 +77,6 @@ export async function POST(req: NextRequest) {
         { error: "Weight must be a non-negative number" },
         { status: 400 }
       );
-      console.log("Parsed weight:", parsedWeight);
     }
 
     // Ensure image_url is either string or null
@@ -94,7 +87,6 @@ export async function POST(req: NextRequest) {
       [name, description, parsedPrice, category, parsedStock, parsedWeight, image]
     );
 
-    console.log("✅ Product added successfully, ID:", (result as any).insertId);
     return NextResponse.json({ success: true, id: (result as any).insertId });
   } catch (err: any) {
     console.error("❌ Failed to add product:", err);

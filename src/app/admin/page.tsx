@@ -125,9 +125,7 @@ function UsersManager() {
         headers: { Authorization: `Bearer ${token}` },
       });
       
-      console.log("Users API response status:", res.status);
       const data = await res.json();
-      console.log("Users data:", data);
       
       setUsers(data.users || []);
     } catch (err) {
@@ -353,14 +351,12 @@ const savePet = async (id: number) => {
 
     try {
       const token = localStorage.getItem("token");
-      console.log("🗑️ Deleting pet ID:", id);
       
       const res = await fetch(`/api/admin/pets/${id}`, {
         method: "DELETE",
         headers: { Authorization: `Bearer ${token}` },
       });
 
-      console.log("Delete response status:", res.status);
 
       if (res.ok) {
         alert("Pet listing deleted successfully");
@@ -1217,7 +1213,6 @@ const filteredOrders = orders.filter((order) => {
       });
 
       const data = await res.json();
-      console.log("Approve response:", data);
 
       if (res.ok) {
         alert("Order approved successfully");
@@ -1244,7 +1239,6 @@ const setOrderPending = async (id: number) => {
       });
 
       const data = await res.json();
-      console.log("Set pending response:", data);
 
       if (res.ok) {
         alert("Order set to pending successfully");
@@ -1269,7 +1263,6 @@ const setOrderPending = async (id: number) => {
       });
 
       const data = await res.json();
-      console.log("Delete response:", data);
 
       if (res.ok) {
         alert("Order deleted successfully");

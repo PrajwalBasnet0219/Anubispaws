@@ -71,7 +71,6 @@ export default function DashboardPage() {
       });
       const data = await res.json();
       setOrders(data.orders || []);
-      console.log(data.orders);
 
     } catch (err) {
       console.error("Failed to fetch orders:", err);
