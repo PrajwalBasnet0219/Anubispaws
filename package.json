@@ -6,11 +6,17 @@
     "dev": "next dev --turbopack",
     "build": "next build --turbopack",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "drizzle-kit migrate",
+     "db:push": "drizzle-kit push",
+        "db:pull": "drizzle-kit pull",
+        "db:studio": "drizzle-kit studio"
   },
   "dependencies": {
     "@auth/drizzle-adapter": "^1.10.0",
     "@fortawesome/fontawesome-free": "^7.0.1",
+    "@neondatabase/serverless": "^1.1.0",
     "@radix-ui/react-slot": "^1.2.3",
     "anubispaws": "file:",
     "bcrypt": "^6.0.0",

@@ -36,7 +36,7 @@ async function run(rawSql: string, params: any[] = []): Promise<any[]> {
   }
 
   const res = await pool.query(toPgSql(sql), params);
-  return res.rows as ResultRow[];
+  return [res.rows as ResultRow[]];
 }
 
 const db = {

@@ -1,0 +1,101 @@
+ANUBISPAWS - DATABASE MIGRATION SUMMARY (MySQL -> Neon PostgreSQL)
+===================================================================
+
+WHAT CHANGED AND WHY
+--------------------
+The website was originally connected to a local MySQL database
+(localhost, database name: pet_care). Vercel does not provide MySQL,
+so the whole project was migrated to a hosted PostgreSQL database
+on Neon (project name: anubis-amethyst-lantern).
+
+
+HOW THE CONNECTION WORKS
+------------------------
+There is NO database address written anywhere in the code.
+The app reads one environment variable:
+
+    DATABASE_URL
+
+This variable holds the full Neon connection string, something like:
+
+    postgresql://user:password@ep-xxxx-pooler.region.aws.neon.tech/neondb?sslmode=require
+
+It is stored in TWO places:
+  - Locally:   .env.local   (never committed to git)
+  - On Vercel: Project -> Settings -> Environment Variables
+               (added automatically by the Vercel-Neon integration,
+                or manually with the "pooled" string from the Neon dashboard)
+
+If the DATABASE_URL value changes or is wrong, the site shows DNS errors
+like "getaddrinfo ENOTFOUND ..." - fix = copy a fresh pooled connection
+string from console.neon.tech and update the env var, then REDEPLOY.
+
+
+WHAT CODE WAS CHANGED
+---------------------
+1. src/db/db.ts  (THE MAIN CHANGE - the only file that talks to the DB driver)
+   - Before: used the "mysql2" library pointed at localhost MySQL
+   - Now:    uses the "pg" (node-postgres) library pointed at DATABASE_URL
+   - It is a compatibility wrapper: the rest of the codebase still writes
+     queries in MySQL style (question-mark placeholders like WHERE id = ?),
+     and this wrapper silently converts them to Postgres style ($1, $2...)
+     and converts the results back to the shape MySQL returned.
+   - Because of this wrapper, none of the 28 files containing SQL had to
+     be rewritten. They all import from "@/db/db".
+
+2. src/db/client.ts
+   - Used by Google login (NextAuth). Now just re-exports the same
+     Postgres wrapper from db.ts instead of creating its own MySQL pool.
+
+3. src/app/api/auth/forgot-password/route.ts
+   - One MySQL-only function replaced:
+       DATE_ADD(NOW(), INTERVAL 10 MINUTE)  ->  NOW() + INTERVAL '10 minutes'
+
+4. src/app/api/reset-password/route.ts
+   - Was opening its own hardcoded localhost MySQL connection.
+     Now uses the shared Postgres pool like everything else.
+
+5. package.json
+   - "pg" library added (the Postgres driver).
+   - "mysql2" no longer imported anywhere (can be uninstalled).
+
+Everything else (all API routes, pages, components) is untouched.
+
+
+THE TABLES (SCHEMA)
+-------------------
+The table structure lives in:
+
+    src/db/postgres-schema.sql
+
+Tables created: users, pets, products, orders, payments,
+password_resets, order_items.
+
+This file must be run ONCE on the Neon database:
+  - Open console.neon.tech -> project anubis-amethyst-lantern
+  - Open the SQL Editor
+  - Paste the entire contents of src/db/postgres-schema.sql and Run
+
+NOTE: data does NOT transfer automatically. The old local MySQL data
+(pets, products, users) stays on localhost. On Neon everything starts
+empty - accounts/pets/products must be re-created through the site.
+
+
+DEPLOYMENT CHECKLIST (Vercel)
+-----------------------------
+Required environment variables (Settings -> Environment Variables):
+
+  DATABASE_URL          <- Neon pooled connection string (postgresql://...)
+  JWT_SECRET            <- random hex string
+  ADMIN_EMAIL           <- reikuozaki96@gmail.com
+  APP_URL               <- https://<your-app>.vercel.app  (NOT localhost)
+  NEXTAUTH_SECRET
+  NEXTAUTH_URL          <- https://<your-app>.vercel.app  (NOT localhost)
+  GOOGLE_CLIENT_ID
+  GOOGLE_CLIENT_SECRET
+  KHALTI_SECRET_KEY
+  KHALTI_VERIFY_URL
+  EMAIL_HOST / EMAIL_PORT / EMAIL_USER / EMAIL_PASS / EMAIL_FROM
+
+After changing ANY env variable you MUST redeploy
+(Deployments -> ... -> Redeploy) or the old values keep being used.
